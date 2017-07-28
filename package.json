@@ -1,0 +1,44 @@
+{
+  "name": "unitejs-image",
+  "version": "0.0.1",
+  "description": "Core code for manipulating images",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unitejs/image.git"
+  },
+  "keywords": [
+    "unite",
+    "unitejs",
+    "svg",
+    "ico",
+    "png",
+    "framework",
+    "scaffolding",
+    "boilerplate"
+  ],
+  "author": "martyn@unitejs.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unitejs/image/issues"
+  },
+  "homepage": "https://github.com/unitejs/image#readme",
+  "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
+    "chai": "^4.1.0",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^4.3.1",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-tslint": "^8.1.1",
+    "gulp-typescript": "^3.2.1",
+    "merge2": "^1.1.0",
+    "run-sequence": "^2.0.0",
+    "tslint": "^5.5.0",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "unitejs-framework": "^0.6.0"
+  }
+}

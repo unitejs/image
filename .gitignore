@@ -1,0 +1,8 @@
+.vscode
+node_modules
+*.bat
+*.lock
+*.log
+package-lock.json
+.history/
+test/unit/dist/

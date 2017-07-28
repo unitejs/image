@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "rootDir": ".",
+        "allowJs": false,
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": false,
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "unitejs-framework/*": [
+                "node_modules/unitejs-framework/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "test/unit/src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
