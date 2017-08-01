@@ -1,9 +1,6 @@
-/**
- * SVG class for manipulating SVG images.
- */
+import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 export declare class SVG {
-    private _fileSystem;
-    constructor(fileSystem: IFileSystem);
-    convertToPng(sourceFolder: string, sourceFilename: string, destFolder: string, destFilename: string, destWidth: number, destHeight: string): Promise<void>;
+    toPng(display: IDisplay, fileSystem: IFileSystem, sourceFolder: string, sourceFile: string, destFolder: string, destFile: string, width: string, height: string, margin: string, background: string): Promise<number>;
+    toMask(display: IDisplay, fileSystem: IFileSystem, sourceFolder: string, sourceFile: string, destFolder: string, destFile: string, mask: string): Promise<number>;
 }

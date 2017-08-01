@@ -45,7 +45,7 @@
         "no-any": false,
         "no-arg": true,
         "no-backbone-get-set-outside-model": true,
-        "no-bitwise": true,
+        "no-bitwise": false,
         "no-conditional-assignment": true,
         "no-console": [true, "debug", "info", "log", "time", "timeEnd", "trace"],
         "no-constant-condition": true,
@@ -155,7 +155,7 @@
         "ordered-imports": [true],
         "prefer-array-literal": true,
         "prefer-const": true,
-        "prefer-for-of": true,
+        "prefer-for-of": false,
         "prefer-method-signature": true,
         "prefer-template": true,
         "return-undefined": false, // this actually affect the readability of the code
