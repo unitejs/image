@@ -1,11 +1,13 @@
 {
   "name": "unitejs-image",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Core code for manipulating images",
   "repository": {
     "type": "git",
     "url": "https://github.com/unitejs/image.git"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "unite",
     "unitejs",

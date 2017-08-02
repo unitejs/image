@@ -3,7 +3,6 @@
  */
 import { create, WebPage } from "phantom";
 import { TextDecoder, TextEncoder } from "text-encoding";
-import { ColorHelper } from "unitejs-framework/dist/helpers/colorHelper";
 import { ParameterValidation } from "unitejs-framework/dist/helpers/parameterValidation";
 import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
@@ -17,7 +16,8 @@ export class SVG {
                        destFile: string,
                        width: string,
                        height: string,
-                       margin: string,
+                       marginX: string,
+                       marginY: string,
                        background: string): Promise<number> {
         let ret;
         let phantom;
@@ -49,12 +49,20 @@ export class SVG {
                 return 1;
             }
 
-            if (margin !== null && margin !== undefined && margin.length > 0) {
-                if (!ParameterValidation.isNumeric(display, "margin", margin)) {
+            if (marginX !== null && marginX !== undefined && marginX.length > 0) {
+                if (!ParameterValidation.isNumeric(display, "marginX", marginX)) {
                     return 1;
                 }
             } else {
-                margin = "0";
+                marginX = "0";
+            }
+
+            if (marginY !== null && marginY !== undefined && marginY.length > 0) {
+                if (!ParameterValidation.isNumeric(display, "marginY", marginY)) {
+                    return 1;
+                }
+            } else {
+                marginY = "0";
             }
 
             if (background !== null && background !== undefined && background.length > 0) {
@@ -72,22 +80,19 @@ export class SVG {
                 style += ` body { background-color: ${background}}`;
             }
 
-            const w = parseFloat(width);
-            const h = parseFloat(height);
-            const marginP = parseFloat(margin);
+            let w = parseFloat(width);
+            let h = parseFloat(height);
+            const marginXPixels = parseFloat(marginX);
+            const marginYPixels = parseFloat(marginY);
 
-            const marginWidth = w * ((100 - marginP) / 100);
-            const marginHeight = h * ((100 - marginP) / 100);
+            w -= marginXPixels * 2;
+            h -= marginYPixels * 2;
 
-            if (marginP > 0) {
-                const leftOffset = Math.abs((w - marginWidth) / 2);
-                const topOffset = Math.abs((h - marginHeight) / 2);
-                style += ` img { position: absolute; left: ${leftOffset}px; top: ${topOffset}px}`;
-            }
+            style += ` img { position: absolute; left: ${marginXPixels}px; top: ${marginYPixels}px}`;
 
             const svgFilename = fileSystem.pathCombine(sourceFolder, sourceFile);
 
-            const content = `<html><style>${style}</style><body><img width="${marginWidth}" height="${marginHeight}" src=\"file:///${svgFilename}\"/></body></html>`;
+            const content = `<html><style>${style}</style><body><img width="${w}" height="${h}" src=\"file:///${svgFilename}\"/></body></html>`;
             await page.property("viewportSize", { width, height });
             await page.property("content", content);
             const base64 = await page.renderBase64("PNG");
@@ -115,8 +120,7 @@ export class SVG {
                         sourceFolder: string,
                         sourceFile: string,
                         destFolder: string,
-                        destFile: string,
-                        mask: string): Promise<number> {
+                        destFile: string): Promise<number> {
         let ret;
 
         try {
@@ -138,21 +142,10 @@ export class SVG {
                 return 1;
             }
 
-            if (!ParameterValidation.isColor(display, "mask", mask)) {
-                return 1;
-            }
-
             const svgData = await fileSystem.fileReadBinary(sourceFolder, sourceFile);
             let svgText = new TextDecoder().decode(svgData);
 
-            const rgb = ColorHelper.parseHex(mask);
-            /* tslint:disable */
-            if (rgb) {
-                console.log(`fill=\"rgb\\(${rgb.r},${rgb.g},${rgb.b}\\)\"`);
-                console.log(`fill=\"${mask}\"`);
-                svgText = svgText.replace(new RegExp(`fill=\"rgb\\(${rgb.r},${rgb.g},${rgb.b}\\)\"`, "gi"), "fill=\"rgb(0,0,0)\"");
-                svgText = svgText.replace(new RegExp(`fill=\"${mask}\"`, "gi"), "fill=\"rgb(0,0,0)\"");
-            }
+            svgText = svgText.replace(/fill=\".*?\"/gi, "fill=\"rgb(0,0,0)\"");
 
             await fileSystem.fileWriteBinary(destFolder, destFile, new TextEncoder().encode(svgText));
 
