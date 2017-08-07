@@ -1,3 +1,6 @@
+# v0.1.1
+* Rationalised logging/display interfaces
+
 # v0.1.0
 * Added svg to png conversion
 * Added png to ico conversion

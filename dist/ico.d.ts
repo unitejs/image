@@ -1,7 +1,7 @@
-import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
+import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 export declare class ICO {
-    fromPngs(display: IDisplay, fileSystem: IFileSystem, sourceFolder: string, sourceFiles: string[], destFolder: string, destFile: string): Promise<number>;
+    fromPngs(logger: ILogger, fileSystem: IFileSystem, sourceFolder: string, sourceFiles: string[], destFolder: string, destFile: string): Promise<number>;
     private imagesToIco(images);
     private getHeader(numOfImages);
     private getDir(img, offset);

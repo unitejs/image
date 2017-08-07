@@ -1,6 +1,6 @@
 {
   "name": "unitejs-image",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Core code for manipulating images",
   "repository": {
     "type": "git",
@@ -47,6 +47,6 @@
     "jimp": "^0.2.28",
     "phantom": "^4.0.5",
     "text-encoding": "^0.6.4",
-    "unitejs-framework": "^0.6.1"
+    "unitejs-framework": "^0.7.1"
   }
 }

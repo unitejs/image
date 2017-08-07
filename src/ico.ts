@@ -3,11 +3,11 @@
  */
 import * as Jimp from "jimp";
 import { ParameterValidation } from "unitejs-framework/dist/helpers/parameterValidation";
-import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
+import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 
 export class ICO {
-    public async fromPngs(display: IDisplay,
+    public async fromPngs(logger: ILogger,
                           fileSystem: IFileSystem,
                           sourceFolder: string,
                           sourceFiles: string[],
@@ -15,21 +15,19 @@ export class ICO {
                           destFile: string): Promise<number> {
 
         try {
-            display.info("Converting PNGs to ICO");
-
-            if (!ParameterValidation.notEmpty(display, "sourceFolder", sourceFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "sourceFiles", sourceFiles)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFiles", sourceFiles)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFolder", destFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "destFolder", destFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFile", destFile)) {
+            if (!ParameterValidation.notEmpty(logger, "destFile", destFile)) {
                 return 1;
             }
 
@@ -44,7 +42,7 @@ export class ICO {
 
             return 0;
         } catch (e) {
-            display.error("Conversion failed", e);
+            logger.error("Conversion failed", e);
             return 1;
         }
     }

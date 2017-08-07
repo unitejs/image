@@ -4,11 +4,11 @@
 import { create, WebPage } from "phantom";
 import { TextDecoder, TextEncoder } from "text-encoding";
 import { ParameterValidation } from "unitejs-framework/dist/helpers/parameterValidation";
-import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
+import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 
 export class SVG {
-    public async toPng(display: IDisplay,
+    public async toPng(logger: ILogger,
                        fileSystem: IFileSystem,
                        sourceFolder: string,
                        sourceFile: string,
@@ -23,34 +23,32 @@ export class SVG {
         let phantom;
 
         try {
-            display.info("Converting SVG to PNG");
-
-            if (!ParameterValidation.notEmpty(display, "sourceFolder", sourceFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "sourceFile", sourceFile)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFile", sourceFile)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFolder", destFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "destFolder", destFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFile", destFile)) {
+            if (!ParameterValidation.notEmpty(logger, "destFile", destFile)) {
                 return 1;
             }
 
-            if (!ParameterValidation.isNumeric(display, "width", width)) {
+            if (!ParameterValidation.isNumeric(logger, "width", width)) {
                 return 1;
             }
 
-            if (!ParameterValidation.isNumeric(display, "height", height)) {
+            if (!ParameterValidation.isNumeric(logger, "height", height)) {
                 return 1;
             }
 
             if (marginX !== null && marginX !== undefined && marginX.length > 0) {
-                if (!ParameterValidation.isNumeric(display, "marginX", marginX)) {
+                if (!ParameterValidation.isNumeric(logger, "marginX", marginX)) {
                     return 1;
                 }
             } else {
@@ -58,7 +56,7 @@ export class SVG {
             }
 
             if (marginY !== null && marginY !== undefined && marginY.length > 0) {
-                if (!ParameterValidation.isNumeric(display, "marginY", marginY)) {
+                if (!ParameterValidation.isNumeric(logger, "marginY", marginY)) {
                     return 1;
                 }
             } else {
@@ -66,7 +64,7 @@ export class SVG {
             }
 
             if (background !== null && background !== undefined && background.length > 0) {
-                if (!ParameterValidation.isColor(display, "background", background)) {
+                if (!ParameterValidation.isColor(logger, "background", background)) {
                     return 1;
                 }
             }
@@ -100,7 +98,7 @@ export class SVG {
 
             ret = 0;
         } catch (e) {
-            display.error("Conversion failed", e);
+            logger.error("Conversion failed", e);
             ret = 1;
         }
 
@@ -115,7 +113,7 @@ export class SVG {
         return ret;
     }
 
-    public async toMask(display: IDisplay,
+    public async toMask(logger: ILogger,
                         fileSystem: IFileSystem,
                         sourceFolder: string,
                         sourceFile: string,
@@ -124,21 +122,19 @@ export class SVG {
         let ret;
 
         try {
-            display.info("Converting SVG to Mask");
-
-            if (!ParameterValidation.notEmpty(display, "sourceFolder", sourceFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "sourceFile", sourceFile)) {
+            if (!ParameterValidation.notEmpty(logger, "sourceFile", sourceFile)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFolder", destFolder)) {
+            if (!ParameterValidation.notEmpty(logger, "destFolder", destFolder)) {
                 return 1;
             }
 
-            if (!ParameterValidation.notEmpty(display, "destFile", destFile)) {
+            if (!ParameterValidation.notEmpty(logger, "destFile", destFile)) {
                 return 1;
             }
 
@@ -151,7 +147,7 @@ export class SVG {
 
             ret = 0;
         } catch (e) {
-            display.error("Conversion failed", e);
+            logger.error("Conversion failed", e);
             ret = 1;
         }
 
