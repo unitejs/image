@@ -1,3 +1,6 @@
+# v0.1.2
+* Added png to icns conversion
+
 # v0.1.1
 * Rationalised logging/display interfaces
 
