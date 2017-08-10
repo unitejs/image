@@ -1,3 +1,6 @@
+# v0.1.4
+* Housekeeping and CI Integration
+
 # v0.1.3
 * Housekeeping and CI Integration
 
