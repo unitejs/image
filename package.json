@@ -26,19 +26,27 @@
     "url": "https://github.com/unitejs/image/issues"
   },
   "homepage": "https://github.com/unitejs/image#readme",
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "devDependencies": {
     "@types/chai": "^4.0.1",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.17",
     "@types/phantom": "^3.2.2",
     "chai": "^4.1.0",
+    "coveralls": "^2.13.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
-    "gulp-mocha": "^4.3.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-istanbul": "^1.1.2",
+    "gulp-mocha": "3.0.0",
+    "gulp-replace": "^0.6.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-tslint": "^8.1.1",
     "gulp-typescript": "^3.2.1",
     "merge2": "^1.1.0",
+    "remap-istanbul": "^0.9.5",
     "run-sequence": "^2.0.0",
     "tslint": "^5.5.0",
     "tslint-microsoft-contrib": "^5.0.1",

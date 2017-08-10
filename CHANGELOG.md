@@ -1,5 +1,5 @@
 # v0.1.3
-* Housekeeping
+* Housekeeping and CI Integration
 
 # v0.1.2
 * Added png to icns conversion
