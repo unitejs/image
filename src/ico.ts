@@ -9,10 +9,10 @@ import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 export class ICO {
     public async fromPngs(logger: ILogger,
                           fileSystem: IFileSystem,
-                          sourceFolder: string,
-                          sourceFiles: string[],
-                          destFolder: string,
-                          destFile: string): Promise<number> {
+                          sourceFolder: string | undefined | null,
+                          sourceFiles: string[] | undefined | null,
+                          destFolder: string | undefined | null,
+                          destFile: string | undefined | null): Promise<number> {
 
         try {
             if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {

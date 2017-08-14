@@ -9,9 +9,9 @@ import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 export class ICNS {
     public async fromPng(logger: ILogger,
                          fileSystem: IFileSystem,
-                         sourceFolder: string,
-                         sourceFile: string,
-                         destFolder: string,
+                         sourceFolder: string | undefined | null,
+                         sourceFile: string | undefined | null,
+                         destFolder: string | undefined | null,
                          destFile: string): Promise<number> {
 
         try {

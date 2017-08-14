@@ -10,15 +10,15 @@ import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 export class SVG {
     public async toPng(logger: ILogger,
                        fileSystem: IFileSystem,
-                       sourceFolder: string,
-                       sourceFile: string,
-                       destFolder: string,
-                       destFile: string,
-                       width: string,
-                       height: string,
-                       marginX: string,
-                       marginY: string,
-                       background: string): Promise<number> {
+                       sourceFolder: string | undefined | null,
+                       sourceFile: string | undefined | null,
+                       destFolder: string | undefined | null,
+                       destFile: string | undefined | null,
+                       width: number | undefined | null,
+                       height: number | undefined | null,
+                       marginX: number | undefined | null,
+                       marginY: number | undefined | null,
+                       background: string | undefined): Promise<number> {
         let ret;
         let phantom;
 
@@ -39,28 +39,22 @@ export class SVG {
                 return 1;
             }
 
-            if (!ParameterValidation.isNumeric(logger, "width", width)) {
+            if (width === undefined || width <= 0) {
+                logger.error("width", "parameter must be greater than 0.");
                 return 1;
             }
 
-            if (!ParameterValidation.isNumeric(logger, "height", height)) {
+            if (width === undefined || height <= 0) {
+                logger.error("height", "parameter must be greater than 0.");
                 return 1;
             }
 
-            if (marginX !== null && marginX !== undefined && marginX.length > 0) {
-                if (!ParameterValidation.isNumeric(logger, "marginX", marginX)) {
-                    return 1;
-                }
-            } else {
-                marginX = "0";
+            if (marginX === undefined) {
+                marginX = 0;
             }
 
-            if (marginY !== null && marginY !== undefined && marginY.length > 0) {
-                if (!ParameterValidation.isNumeric(logger, "marginY", marginY)) {
-                    return 1;
-                }
-            } else {
-                marginY = "0";
+            if (marginY === undefined) {
+                marginY = 0;
             }
 
             if (background !== null && background !== undefined && background.length > 0) {
@@ -78,19 +72,14 @@ export class SVG {
                 style += ` body { background-color: ${background}}`;
             }
 
-            let w = parseFloat(width);
-            let h = parseFloat(height);
-            const marginXPixels = parseFloat(marginX);
-            const marginYPixels = parseFloat(marginY);
+            width -= marginX * 2;
+            height -= marginY * 2;
 
-            w -= marginXPixels * 2;
-            h -= marginYPixels * 2;
-
-            style += ` img { position: absolute; left: ${marginXPixels}px; top: ${marginYPixels}px}`;
+            style += ` img { position: absolute; left: ${marginX}px; top: ${marginY}px}`;
 
             const svgFilename = fileSystem.pathCombine(sourceFolder, sourceFile);
 
-            const content = `<html><style>${style}</style><body><img width="${w}" height="${h}" src=\"file:///${svgFilename}\"/></body></html>`;
+            const content = `<html><style>${style}</style><body><img width="${width}" height="${height}" src=\"file:///${svgFilename}\"/></body></html>`;
             await page.property("viewportSize", { width, height });
             await page.property("content", content);
             const base64 = await page.renderBase64("PNG");
