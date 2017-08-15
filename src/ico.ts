@@ -5,6 +5,7 @@ import * as Jimp from "jimp";
 import { ParameterValidation } from "unitejs-framework/dist/helpers/parameterValidation";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
+import { DefaultLogger } from "unitejs-framework/dist/loggers/defaultLogger";
 
 export class ICO {
     public async fromPngs(logger: ILogger,
@@ -15,6 +16,16 @@ export class ICO {
                           destFile: string | undefined | null): Promise<number> {
 
         try {
+            if (logger === undefined || logger === null) {
+                DefaultLogger.log("Unable to continue without logger");
+                return 1;
+            }
+
+            if (fileSystem === undefined || fileSystem === null) {
+                logger.error("Unable to continue without file system");
+                return 1;
+            }
+
             if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {
                 return 1;
             }
@@ -33,9 +44,27 @@ export class ICO {
 
             const imageData: Jimp[] = [];
             for (let i = 0; i < sourceFiles.length; i++) {
-                const j = await Jimp.read(fileSystem.pathCombine(sourceFolder, sourceFiles[i]));
-                imageData.push(j);
+                const fileExists = await fileSystem.fileExists(sourceFolder, sourceFiles[i]);
+                if (fileExists) {
+                    const pngBuffer = await fileSystem.fileReadBinary(sourceFolder, sourceFiles[i]);
+                    if (pngBuffer.length > 0) {
+                        const j = await Jimp.read(new Buffer(pngBuffer));
+                        imageData.push(j);
+                    } else {
+                        logger.error("Source Image is zero length", undefined, [ sourceFiles[i] ]);
+                        return 1;
+                    }
+                } else {
+                    logger.error("Source Image does not exist", undefined, [ sourceFiles[i] ]);
+                    return 1;
+                }
             }
+
+            const dirExists = await fileSystem.directoryExists(destFolder);
+            if (!dirExists) {
+                await fileSystem.directoryCreate(destFolder);
+            }
+
             const icoData = this.imagesToIco(imageData);
 
             await fileSystem.fileWriteBinary(destFolder, destFile, icoData);
@@ -57,7 +86,7 @@ export class ICO {
 
         images.forEach(img => {
             const dir = this.getDir(img, offset);
-            const bmpInfoHeader = this.getBmpInfoHeader(img, 0);
+            const bmpInfoHeader = this.getBmpInfoHeader(img);
             const dib = this.getDib(img);
 
             headerAndIconDir.push(dir);
@@ -102,7 +131,7 @@ export class ICO {
     }
 
     // https://en.wikipedia.org/wiki/BMP_file_format
-    private getBmpInfoHeader(img: Jimp, compressionMode: number): Buffer {
+    private getBmpInfoHeader(img: Jimp): Buffer {
         const buf = Buffer.alloc(40);
         const bitmap = img.bitmap;
         const size = bitmap.data.length;
@@ -111,7 +140,7 @@ export class ICO {
         // ...Even if the AND mask is not supplied,
         // if the image is in Windows BMP format,
         // the BMP header must still specify a doubled height.
-        const height = compressionMode === 0 ? width * 2 : width;
+        const height = width * 2;
         const bpp = 32;
 
         buf.writeUInt32LE(40, 0); // The size of this header (40 bytes)
@@ -119,7 +148,7 @@ export class ICO {
         buf.writeInt32LE(height, 8); // The bitmap height in pixels (signed integer)
         buf.writeUInt16LE(1, 12); // The number of color planes (must be 1)
         buf.writeUInt16LE(bpp, 14); // The number of bits per pixel
-        buf.writeUInt32LE(compressionMode, 16); // The compression method being used.
+        buf.writeUInt32LE(0, 16); // The compression method being used.
         buf.writeUInt32LE(size, 20); // The image size.
         buf.writeInt32LE(0, 24); // The horizontal resolution of the image. (signed integer)
         buf.writeInt32LE(0, 28); // The horizontal resolution of the image. (signed integer)

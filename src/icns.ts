@@ -5,6 +5,7 @@ import * as Jimp from "jimp";
 import { ParameterValidation } from "unitejs-framework/dist/helpers/parameterValidation";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
+import { DefaultLogger } from "unitejs-framework/dist/loggers/defaultLogger";
 
 export class ICNS {
     public async fromPng(logger: ILogger,
@@ -15,6 +16,16 @@ export class ICNS {
                          destFile: string): Promise<number> {
 
         try {
+            if (logger === undefined || logger === null) {
+                DefaultLogger.log("Unable to continue without logger");
+                return 1;
+            }
+
+            if (fileSystem === undefined || fileSystem === null) {
+                logger.error("Unable to continue without file system");
+                return 1;
+            }
+
             if (!ParameterValidation.notEmpty(logger, "sourceFolder", sourceFolder)) {
                 return 1;
             }
@@ -31,16 +42,38 @@ export class ICNS {
                 return 1;
             }
 
-            const sourceImage = fileSystem.pathCombine(sourceFolder, sourceFile);
-            logger.info("Reading Source PNG", [sourceImage]);
-            const pngImageData: Jimp = await Jimp.read(sourceImage);
+            const exists = await fileSystem.fileExists(sourceFolder, sourceFile);
 
-            const icnsData = await this.imageToIcns(logger, pngImageData);
+            if (exists) {
+                const sourceImage = fileSystem.pathCombine(sourceFolder, sourceFile);
+                logger.info("Reading Source PNG", [sourceImage]);
 
-            logger.info("Writing ICNS ", [ fileSystem.pathCombine(destFolder, destFile) ]);
-            await fileSystem.fileWriteBinary(destFolder, destFile, icnsData);
+                const pngBuffer = await fileSystem.fileReadBinary(sourceFolder, sourceFile);
+                if (pngBuffer.length > 0) {
+                    const pngImageData = await Jimp.read(new Buffer(pngBuffer));
 
-            return 0;
+                    if (pngImageData === undefined) {
+                        logger.error("Error reading source image");
+                        return 1;
+                    } else {
+                        const icnsData = await this.imageToIcns(logger, pngImageData);
+                        logger.info("Writing ICNS ", [fileSystem.pathCombine(destFolder, destFile)]);
+
+                        const dirExists = await fileSystem.directoryExists(destFolder);
+                        if (!dirExists) {
+                            await fileSystem.directoryCreate(destFolder);
+                        }
+                        await fileSystem.fileWriteBinary(destFolder, destFile, icnsData);
+                        return 0;
+                    }
+                } else {
+                    logger.error("Source Image is zero length");
+                    return 1;
+                }
+            } else {
+                logger.error("Source Image does not exist");
+                return 1;
+            }
         } catch (e) {
             logger.error("Conversion failed", e);
             return 1;
@@ -85,16 +118,12 @@ export class ICNS {
             chunkImage.resize(size, size);
 
             chunkImage.getBuffer(Jimp.MIME_PNG, (err, pngData) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    // Icon header, 'type' + (length of icon + icon header length)
-                    const iconHeader: Buffer = Buffer.alloc(8, 0);
-                    iconHeader.write(type, 0);
-                    iconHeader.writeUInt32BE(pngData.length + 8, 4);
+                // Icon header, 'type' + (length of icon + icon header length)
+                const iconHeader: Buffer = Buffer.alloc(8, 0);
+                iconHeader.write(type, 0);
+                iconHeader.writeUInt32BE(pngData.length + 8, 4);
 
-                    resolve(Buffer.concat([outBuffer, iconHeader, pngData], outBuffer.length + iconHeader.length + pngData.length));
-                }
+                resolve(Buffer.concat([outBuffer, iconHeader, pngData], outBuffer.length + iconHeader.length + pngData.length));
             });
         });
     }

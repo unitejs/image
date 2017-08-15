@@ -5,6 +5,6 @@ export declare class ICO {
     private imagesToIco(images);
     private getHeader(numOfImages);
     private getDir(img, offset);
-    private getBmpInfoHeader(img, compressionMode);
+    private getBmpInfoHeader(img);
     private getDib(img);
 }

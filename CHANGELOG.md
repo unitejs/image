@@ -1,3 +1,6 @@
+# v0.1.5
+* Unit Tests and Fixes
+
 # v0.1.4
 * Housekeeping and CI Integration
 
