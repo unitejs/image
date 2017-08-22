@@ -53,19 +53,27 @@ export class SVG {
             if (width === undefined || width === null || width <= 0) {
                 logger.error("width", "parameter must be greater than 0.");
                 return 1;
+            } else {
+                logger.info("width", { width });
             }
 
             if (height === undefined || height === null || height <= 0) {
                 logger.error("height", "parameter must be greater than 0.");
                 return 1;
+            } else {
+                logger.info("height", { height });
             }
 
             if (marginX === undefined) {
                 marginX = 0;
+            } else {
+                logger.info("marginX", { marginX });
             }
 
             if (marginY === undefined) {
                 marginY = 0;
+            } else {
+                logger.info("marginY", { marginY });
             }
 
             if (background !== null && background !== undefined && background.length > 0) {
@@ -86,14 +94,14 @@ export class SVG {
                     style += ` body { background-color: ${background}}`;
                 }
 
-                width -= marginX * 2;
-                height -= marginY * 2;
+                const reducedWidth = width - (marginX * 2);
+                const reducedHeight = height - (marginY * 2);
 
                 style += ` img { position: absolute; left: ${marginX}px; top: ${marginY}px}`;
 
                 const svgFilename = fileSystem.pathAbsolute(fileSystem.pathCombine(sourceFolder, sourceFile));
 
-                const content = `<html><style>${style}</style><body><img width="${width}" height="${height}" src=\"file:///${svgFilename}\"/></body></html>`;
+                const content = `<html><style>${style}</style><body><img width="${reducedWidth}" height="${reducedHeight}" src=\"file:///${svgFilename}\"/></body></html>`;
                 await page.property("viewportSize", { width, height });
                 await page.property("content", content);
                 const base64 = await page.renderBase64("PNG");
