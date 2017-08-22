@@ -91,7 +91,7 @@ export class SVG {
 
                 style += ` img { position: absolute; left: ${marginX}px; top: ${marginY}px}`;
 
-                const svgFilename = fileSystem.pathCombine(sourceFolder, sourceFile);
+                const svgFilename = fileSystem.pathAbsolute(fileSystem.pathCombine(sourceFolder, sourceFile));
 
                 const content = `<html><style>${style}</style><body><img width="${width}" height="${height}" src=\"file:///${svgFilename}\"/></body></html>`;
                 await page.property("viewportSize", { width, height });
