@@ -64,17 +64,10 @@ export class SVG {
                 logger.info("height", { height });
             }
 
-            if (marginX === undefined) {
-                marginX = 0;
-            } else {
-                logger.info("marginX", { marginX });
-            }
-
-            if (marginY === undefined) {
-                marginY = 0;
-            } else {
-                logger.info("marginY", { marginY });
-            }
+            const mX = marginX === undefined ? 0 : marginX;
+            const mY = marginY === undefined ? 0 : marginY;
+            logger.info("marginX", { mX });
+            logger.info("marginY", { mY });
 
             if (background !== null && background !== undefined && background.length > 0) {
                 if (!ParameterValidation.isColor(logger, "background", background)) {
@@ -94,10 +87,11 @@ export class SVG {
                     style += ` body { background-color: ${background}}`;
                 }
 
-                const reducedWidth = width - (marginX * 2);
+                const reducedWidth = width - (mX * 2);
+                style += ` img { position: absolute; left: ${mX}px; top: ${mY}px}`;
                 const reducedHeight = height - (marginY * 2);
 
-                style += ` img { position: absolute; left: ${marginX}px; top: ${marginY}px}`;
+                style += ` img { position: absolute; left: ${mX}px; top: ${mY}px}`;
 
                 const svgFilename = fileSystem.pathAbsolute(fileSystem.pathCombine(sourceFolder, sourceFile));
 
