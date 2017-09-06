@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0
+
+Release
+
 ## v0.2.1
 
 * Fixed Reassigning parameter lint rules
