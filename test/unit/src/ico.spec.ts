@@ -6,7 +6,7 @@ import * as Sinon from "sinon";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
 import { DefaultLogger } from "unitejs-framework/dist/loggers/defaultLogger";
-import { ICO } from "../../../dist/ico";
+import { ICO } from "../../../src/ico";
 import { FileSystemMock } from "./fileSystem.mock";
 
 describe("ICO", () => {
