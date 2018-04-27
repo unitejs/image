@@ -10,8 +10,7 @@ install:
   - npm install gulp -g
   - npm link unitejs-framework
   - npm install
-  script: 
+script: 
   - gulp build || travis_terminate 1
   - gulp unit || travis_terminate 1
   - gulp coveralls || travis_terminate 1
-  
