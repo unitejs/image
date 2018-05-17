@@ -48,7 +48,7 @@ export class ICO {
                 if (fileExists) {
                     const pngBuffer = await fileSystem.fileReadBinary(sourceFolder, sourceFiles[i]);
                     if (pngBuffer.length > 0) {
-                        const j = await Jimp.read(new Buffer(pngBuffer));
+                        const j = await Jimp.read(Buffer.from(pngBuffer));
                         imageData.push(j);
                     } else {
                         logger.error("Source Image is zero length", undefined, [ sourceFiles[i] ]);

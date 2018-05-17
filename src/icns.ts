@@ -50,7 +50,7 @@ export class ICNS {
 
                 const pngBuffer = await fileSystem.fileReadBinary(sourceFolder, sourceFile);
                 if (pngBuffer.length > 0) {
-                    const pngImageData = await Jimp.read(new Buffer(pngBuffer));
+                    const pngImageData = await Jimp.read(Buffer.from(pngBuffer));
 
                     if (pngImageData === undefined) {
                         logger.error("Error reading source image");

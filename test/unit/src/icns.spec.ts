@@ -17,7 +17,7 @@ describe("ICNS", () => {
     let loggerErrorSpy: Sinon.SinonSpy;
 
     beforeEach(() => {
-        sandbox = Sinon.sandbox.create();
+        sandbox = Sinon.createSandbox();
         loggerStub = <ILogger>{};
         loggerStub.banner = () => { };
         loggerStub.info = () => { };
